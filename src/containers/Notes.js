@@ -109,6 +109,18 @@ export default class Notes extends Component {
     }
   
     this.setState({ isDeleting: true });
+  
+    try {
+      await this.deleteNote();
+      this.props.history.push("/");
+    } catch (e) {
+      alert(e);
+      this.setState({ isDeleting: false });
+    }
+  }
+  
+  deleteNote() {
+    return API.del("notes", `/notes/${this.props.match.params.id}`);
   }
   
   render() {

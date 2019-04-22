@@ -29,10 +29,16 @@ export default class NewNote extends Component {
   }
 
   handleFileChange = event => {
+    // console.log('**** event.target', event.target)
+    // console.log('**** event.target.value', event.target.value)
+    // console.log('**** event.target.files', event.target.files)
+    // console.log('**** event.target.files[0]', event.target.files[0])
+
     this.file = event.target.files[0];
   }
 
   handleSubmit = async event => {
+    // console.log('**** this.file', this.file)
     event.preventDefault();
   
     if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
@@ -41,18 +47,23 @@ export default class NewNote extends Component {
     }
   
     this.setState({ isLoading: true });
-  
+    
     try {
+      console.log('**** this.file', this.file)
+      console.log('**** s3Upload', s3Upload);
       const attachment = this.file
-        ? await s3Upload(this.file)
-        : null;
-  
+      ? await s3Upload(this.file)
+      : null;
+
+      console.log('*** is thing being called?')
+      
       await this.createNote({
         attachment,
         content: this.state.content
       });
       this.props.history.push("/");
     } catch (e) {
+      // console.log('**** error', e)
       alert(e);
       this.setState({ isLoading: false });
     }
